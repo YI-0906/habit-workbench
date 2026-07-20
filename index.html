@@ -6,7 +6,7 @@
   <meta name="description" content="《高效能人士的七个习惯》知识库、要事第一工作台与复盘问题清单">
   <meta name="theme-color" content="#f7f5f1">
   <meta name="color-scheme" content="light dark">
-  
+
   <title>《高效能人士的七个习惯》知识库与工作台</title>
 
   <!-- 网站图标与 Safari 主屏幕图标 -->
@@ -1186,7 +1186,7 @@
       .matrix-wrap { height:max(640px,calc(100dvh - 210px)); min-height:640px; padding:38px 20px 50px; }
       .matrix-axis-h { right:20px; left:20px; }
 
-      /* 需求2：要事列表移动端仅保留状态筛选 */
+      /* 要事列表移动端仅保留状态筛选 */
       .task-filter-advanced { display:none !important; }
       .task-filters .task-filter-row { grid-template-columns:1fr; }
 
@@ -1219,7 +1219,7 @@
       #page-firstThings.task-panel-open .task-panel-toggle .line-icon { transform:rotate(-90deg); }
       .task-panel-backdrop.visible { position:fixed; inset:0; z-index:45; display:block; background:rgba(43,42,38,.42); }
 
-      /* 需求4：设置弹窗 nav 固定不遮挡，content 独立滚动 */
+      /* 设置弹窗 nav 固定不遮挡，content 独立滚动 */
       .settings-layout {
         display:flex; flex-direction:column;
         flex:1 1 auto; min-height:0; overflow:hidden;
@@ -1234,6 +1234,8 @@
       }
       .settings-nav button.active { border-color:var(--accent); background:var(--accent-soft); color:var(--accent); font-weight:600; }
       .settings-content { flex:1 1 auto; min-height:0; overflow-y:auto; }
+
+      .review-charts { grid-template-columns:1fr; }
     }
 
     /* iOS 聚焦不放大 */
@@ -1311,7 +1313,7 @@
       }
       .matrix-page-fullscreen.controls-hidden .matrix-fs-top { opacity:0; transform:translateY(-14px); pointer-events:none; }
 
-      /* 需求3：周期筛选圆形线条图标按钮，参考退出全屏按钮 */
+      /* 周期筛选圆形线条图标按钮，参考退出全屏按钮 */
       .matrix-fs-periods { display:flex; align-items:center; gap:var(--gap-2); }
       .matrix-fs-period-btn {
         flex:0 0 44px; width:44px; height:44px; padding:0;
@@ -1384,6 +1386,131 @@
 
     /* 顶栏移动端按钮：默认隐藏 */
     .topbar-mobile-only { display:none; }
+
+    /* =========================================================
+       便签进度底色 / 子任务 / 重复规则 / 图表 / FSA / 微动效
+    ========================================================= */
+    :root { --task-fill:rgba(173,67,47,.14); }
+    [data-theme="dark"] { --task-fill:rgba(214,122,99,.20); }
+
+    /* 便签进度底色：统一主题色半透明，从左填充到进度百分比 */
+    .matrix-task {
+      background:linear-gradient(to right,
+        var(--task-fill) 0, var(--task-fill) var(--task-progress,0%),
+        var(--card) var(--task-progress,0%), var(--card) 100%);
+    }
+    .matrix-task.dragging { background:var(--card); }
+    .matrix-subcount {
+      flex:0 0 auto; margin-left:6px; padding:0 5px; border-radius:var(--radius-pill);
+      background:rgba(173,67,47,.10); color:var(--accent); font-size:10px; line-height:16px; white-space:nowrap;
+    }
+    [data-theme="dark"] .matrix-subcount { background:rgba(214,122,99,.18); }
+
+    /* 子任务编辑器（弹窗内） */
+    .subtask-editor { display:grid; gap:var(--gap-2); }
+    .subtask-progress-note { color:var(--faint); font-size:12px; }
+    .subtask-row {
+      display:grid; grid-template-columns:auto minmax(0,1fr) auto; align-items:center; gap:var(--gap-2);
+      padding:5px 8px; border:1px solid var(--line); border-radius:var(--radius); background:#fffdf9;
+    }
+    .subtask-row input[type="text"] {
+      height:var(--control-height-sm); min-height:var(--control-height-sm); padding:0 4px;
+      border-color:transparent; background:transparent;
+    }
+    .subtask-row input[type="text"]:focus { border-color:var(--accent); background:var(--card); }
+    .subtask-row.done input[type="text"] { color:var(--faint); text-decoration:line-through; }
+    .subtask-remove { flex:0 0 auto; width:28px; height:28px; padding:0; color:var(--muted); }
+    .subtask-add-row { display:flex; gap:var(--gap-2); }
+    [data-theme="dark"] .subtask-row { background:#26221b; }
+
+    /* 列表内子任务清单 */
+    .task-subtasks { display:grid; gap:5px; margin:8px 0 0; padding-top:8px; border-top:1px dashed var(--line); }
+    .task-subtask-item {
+      display:flex; align-items:flex-start; gap:8px; padding:1px 0;
+      color:var(--muted); font-size:12px; line-height:1.5; cursor:pointer;
+    }
+    .task-subtask-item input { margin-top:2px; }
+    .task-subtask-item.done span { color:var(--faint); text-decoration:line-through; }
+
+    /* 重复规则详情 */
+    .repeat-detail { display:none; margin-top:10px; padding:12px; border:1px solid var(--line); border-radius:var(--radius); background:#fffdf9; }
+    .repeat-detail.active { display:block; }
+    [data-theme="dark"] .repeat-detail { background:#26221b; }
+    .repeat-line { display:grid; grid-template-columns:76px minmax(0,1fr); align-items:center; gap:var(--gap-2) var(--gap-3); margin-bottom:12px; }
+    .repeat-line:last-child { margin-bottom:0; }
+    .repeat-line > .field-label { margin:0; }
+    .repeat-interval-row { display:flex; align-items:center; gap:var(--gap-2); }
+    .repeat-interval-row input { width:72px; text-align:center; }
+    .repeat-interval-unit { color:var(--muted); font-size:13px; }
+    .repeat-weekdays { display:flex; flex-wrap:wrap; gap:6px; }
+    .repeat-weekday {
+      flex:0 0 auto; width:38px; height:34px; min-height:34px; padding:0;
+      border:1px solid var(--line-dark); border-radius:var(--radius); background:var(--card);
+      color:var(--muted); font-size:12px; cursor:pointer;
+      transition:color .16s ease, border-color .16s ease, background-color .16s ease, transform .16s ease;
+    }
+    .repeat-weekday:hover { color:var(--accent); border-color:var(--accent); }
+    .repeat-weekday.active { color:var(--accent); border-color:var(--accent); background:var(--accent-soft); font-weight:600; }
+    .repeat-weekday:active { transform:scale(.92); }
+    .repeat-end-options { display:grid; gap:var(--gap-2); }
+    .repeat-end-line { display:flex; align-items:center; flex-wrap:wrap; gap:var(--gap-2); color:var(--muted); }
+    .repeat-end-line label { display:flex; align-items:center; gap:6px; cursor:pointer; }
+    .repeat-end-line .custom-date-input,
+    .repeat-end-line input[type="number"] { width:auto; min-width:120px; max-width:190px; flex:0 1 auto; }
+    .repeat-summary { margin-top:10px; padding-top:10px; border-top:1px dashed var(--line); color:var(--accent); font-size:12px; line-height:1.6; }
+
+    /* 复盘图表 */
+    .review-charts { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:var(--gap-3); }
+    .chart-card { padding:var(--gap-4); border:1px solid var(--line); border-radius:var(--radius); background:#fffdf9; }
+    [data-theme="dark"] .chart-card { background:#26221b; }
+    .chart-card h4 { margin:0 0 4px; font-size:15px; }
+    .chart-card .field-help { margin:0 0 10px; }
+    .chart-card svg { display:block; width:100%; height:auto; overflow:visible; }
+    .chart-empty { padding:36px 10px; color:var(--faint); text-align:center; font-size:12px; }
+    .chart-line { fill:none; stroke:var(--accent); stroke-width:2; stroke-linejoin:round; stroke-linecap:round; }
+    .chart-area { fill:rgba(173,67,47,.10); stroke:none; }
+    [data-theme="dark"] .chart-area { fill:rgba(214,122,99,.14); }
+    .chart-dot { fill:var(--card); stroke:var(--accent); stroke-width:2; }
+    .chart-axis { stroke:var(--line-dark); stroke-width:1; }
+    .chart-grid-line { stroke:var(--line); stroke-width:1; stroke-dasharray:3 3; }
+    .chart-label { fill:var(--faint); font-size:10px; }
+    .chart-value { fill:var(--ink); font-size:11px; font-weight:700; }
+    .chart-bar-q1 { fill:#c0553f; }
+    .chart-bar-q2 { fill:var(--accent); }
+    .chart-bar-q3 { fill:#c99a52; }
+    .chart-bar-q4 { fill:#9a968c; }
+    [data-theme="dark"] .chart-bar-q1 { fill:#c76a52; }
+    [data-theme="dark"] .chart-bar-q3 { fill:#c99a52; }
+    [data-theme="dark"] .chart-bar-q4 { fill:#807a6d; }
+
+    /* FSA 半自动备份区 */
+    .fsa-status { margin-top:10px; color:var(--muted); font-size:12px; line-height:1.6; }
+    .fsa-folder-name { color:var(--accent); font-weight:600; word-break:break-all; }
+
+    /* =========================================================
+       微动效（统一，尊重系统“减弱动效”）
+    ========================================================= */
+    @keyframes overlay-fade-in { from { opacity:0; } to { opacity:1; } }
+    @keyframes modal-pop-in { from { opacity:0; transform:translateY(12px) scale(.985); } to { opacity:1; transform:none; } }
+    @keyframes checkbox-pop { 0% { transform:scale(.7); } 55% { transform:scale(1.14); } 100% { transform:scale(1); } }
+    @keyframes page-fade-in { from { opacity:0; } to { opacity:1; } }
+    @keyframes task-pop-in { from { opacity:0; transform:scale(.9); } to { opacity:1; transform:none; } }
+
+    .modal-overlay.active { animation:overlay-fade-in .18s ease; }
+    .modal-overlay.active .modal { animation:modal-pop-in .24s cubic-bezier(.32,.72,0,1); }
+    .page.active { animation:page-fade-in .22s ease; }
+    input[type="checkbox"]:checked, input[type="radio"]:checked { animation:checkbox-pop .22s ease; }
+    .btn:active, .icon-button:active, .tab-btn:active, .task-action:active,
+    .add-matrix-task:active, .nav-toggle:active { transform:scale(.94); }
+    .stat-num, .summary-value, .q-count { transition:color .3s ease; }
+    .matrix-task.just-added { animation:task-pop-in .28s cubic-bezier(.32,.72,0,1); }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration:.001ms !important; animation-iteration-count:1 !important;
+        transition-duration:.001ms !important; scroll-behavior:auto !important;
+      }
+    }
   </style>
 </head>
 
@@ -1477,7 +1604,6 @@
           </button>
         </div>
       </header>
-
       <div class="content">
         <!-- ===== 知识库 ===== -->
         <section class="page" id="page-knowledge">
@@ -1813,6 +1939,27 @@
             </div>
           </section>
 
+          <section class="card" id="review-charts-card">
+            <div class="card-header-row">
+              <div>
+                <h3>趋势图表</h3>
+                <p class="muted" style="margin:4px 0 0">用数据观察时间投向：完成率的周变化，以及未完成事项在四象限的分布。</p>
+              </div>
+            </div>
+            <div class="review-charts">
+              <div class="chart-card">
+                <h4>近 8 周完成率趋势</h4>
+                <p class="field-help">按事项完成时间统计每周完成率。</p>
+                <div id="reviewTrendChart"></div>
+              </div>
+              <div class="chart-card">
+                <h4>未完成事项四象限分布</h4>
+                <p class="field-help">当前未完成、未归档事项在四象限的数量。</p>
+                <div id="reviewQuadrantChart"></div>
+              </div>
+            </div>
+          </section>
+
           <section class="card">
             <h3>分类复盘</h3>
             <div class="review-list">
@@ -1871,7 +2018,6 @@
       </div>
     </main>
   </div>
-
   <!-- 四象限模板 -->
   <template id="matrixTemplate">
     <div class="matrix-shell">
@@ -2068,7 +2214,7 @@
                 <option value="daily">每天</option>
                 <option value="weekly">每周</option>
                 <option value="monthly">每月</option>
-                <option value="weekdays">每个工作日</option>
+                <option value="yearly">每年</option>
               </select>
               <p class="field-help">事项完成时生成下一次，不会预先创建大量未来事项。</p>
             </div>
@@ -2085,14 +2231,71 @@
             </div>
 
             <div class="full">
+              <div class="repeat-detail" id="repeatDetail">
+                <div class="repeat-line">
+                  <label class="field-label" for="modalRepeatInterval">重复间隔</label>
+                  <div class="repeat-interval-row">
+                    <span class="repeat-interval-unit">每</span>
+                    <input id="modalRepeatInterval" type="number" min="1" max="99" step="1" value="1">
+                    <span class="repeat-interval-unit" id="repeatIntervalUnit">天</span>
+                  </div>
+                </div>
+
+                <div class="repeat-line" id="repeatWeekdaysLine">
+                  <span class="field-label">重复星期</span>
+                  <div class="repeat-weekdays" id="repeatWeekdays" role="group" aria-label="选择每周重复的星期">
+                    <button class="repeat-weekday" type="button" data-weekday="1" aria-pressed="false">一</button>
+                    <button class="repeat-weekday" type="button" data-weekday="2" aria-pressed="false">二</button>
+                    <button class="repeat-weekday" type="button" data-weekday="3" aria-pressed="false">三</button>
+                    <button class="repeat-weekday" type="button" data-weekday="4" aria-pressed="false">四</button>
+                    <button class="repeat-weekday" type="button" data-weekday="5" aria-pressed="false">五</button>
+                    <button class="repeat-weekday" type="button" data-weekday="6" aria-pressed="false">六</button>
+                    <button class="repeat-weekday" type="button" data-weekday="0" aria-pressed="false">日</button>
+                  </div>
+                </div>
+
+                <div class="repeat-line">
+                  <span class="field-label">结束条件</span>
+                  <div class="repeat-end-options">
+                    <div class="repeat-end-line">
+                      <label><input type="radio" name="repeatEnd" value="never" checked> 永不结束</label>
+                    </div>
+                    <div class="repeat-end-line">
+                      <label><input type="radio" name="repeatEnd" value="until"> 到指定日期结束</label>
+                      <input id="modalRepeatUntil" class="custom-date-input" type="text" readonly
+                        placeholder="选择结束日期" role="combobox" aria-haspopup="dialog" aria-expanded="false" data-date-kind="optional">
+                    </div>
+                    <div class="repeat-end-line">
+                      <label><input type="radio" name="repeatEnd" value="count"> 重复</label>
+                      <input id="modalRepeatCount" type="number" min="1" max="999" step="1" placeholder="次数">
+                      <span class="repeat-interval-unit">次后停止</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="repeat-summary" id="repeatSummary"></div>
+              </div>
+            </div>
+
+            <div class="full" id="modalProgressField">
               <label class="field-label" for="modalTaskProgress">进度</label>
               <div class="progress-control">
                 <div class="progress-value-row">
-                  <span>拖动调整</span>
+                  <span id="modalProgressHint">拖动调整</span>
                   <output class="progress-output" id="modalTaskProgressValue">0%</output>
                 </div>
                 <input class="task-progress-range" id="modalTaskProgress" type="range" min="0" max="100" step="10" value="0">
               </div>
+            </div>
+
+            <div class="full">
+              <label class="field-label">子任务 / 检查清单</label>
+              <div class="subtask-editor" id="subtaskEditor"></div>
+              <div class="subtask-add-row">
+                <input id="modalSubtaskInput" type="text" maxlength="200" placeholder="添加一个子任务，回车确认" autocomplete="off">
+                <button class="btn small" id="addSubtaskButton" type="button">添加</button>
+              </div>
+              <p class="field-help subtask-progress-note" id="subtaskProgressNote"></p>
             </div>
 
             <div class="full">
@@ -2114,6 +2317,7 @@
         <button class="btn hidden" id="skipRepeatButton" type="button">跳过本次</button>
         <button class="btn hidden" id="stopRepeatButton" type="button">停止重复</button>
         <button class="btn hidden" id="archiveTaskButton" type="button">归档</button>
+        <button class="btn danger hidden" id="deleteTaskButton" type="button">删除</button>
         <button class="btn primary" id="saveTaskButton" type="submit" form="taskForm">保存</button>
         <button class="btn" id="cancelTaskModal" type="button">取消</button>
       </div>
@@ -2400,6 +2604,21 @@
               <p class="field-help" id="lastExportInfo" style="margin-top:10px">上次导出：从未导出</p>
             </div>
 
+            <div class="modal-section" id="fsaSection">
+              <h4>文件夹半自动备份</h4>
+              <p class="muted">授权一个本地文件夹后，可一键把完整备份覆盖写入固定文件，无需每次另存。仅部分浏览器（桌面版 Chrome / Edge）支持，其余浏览器会自动降级为普通下载。</p>
+              <div class="setting-actions">
+                <button class="btn" id="fsaChooseFolder" type="button">选择备份文件夹</button>
+                <button class="btn primary" id="fsaBackupNow" type="button">立即备份到文件夹</button>
+                <button class="btn" id="fsaForget" type="button" disabled>取消授权</button>
+              </div>
+              <label class="checkbox-row" style="margin-top:12px">
+                <input id="settingAutoFolderBackup" type="checkbox">
+                <span>每天首次打开时自动备份到该文件夹</span>
+              </label>
+              <div class="fsa-status" id="fsaStatus">尚未授权备份文件夹。</div>
+            </div>
+
             <div class="modal-section">
               <label class="file-input-label" for="importBackupFile">选择 JSON 备份文件</label>
               <input class="visually-hidden" id="importBackupFile" type="file" accept=".json,application/json">
@@ -2540,6 +2759,7 @@
     const STORE_KV = "kv";
     const STORE_SNAPSHOTS = "snapshots";
     const KV_KEYS = { appData: "appData" };
+    const KV_FSA_HANDLE = "fsaDirHandle";
 
     let dbInstance = null;
 
@@ -2614,10 +2834,24 @@
       return txDone(tx);
     }
 
+    /* FSA 目录句柄存取（结构化克隆可存 IndexedDB） */
+    async function loadFsaHandle() {
+      try { return await idbGet(STORE_KV, KV_FSA_HANDLE); } catch (e) { return null; }
+    }
+    async function saveFsaHandle(handle) {
+      try { await idbSet(STORE_KV, handle, KV_FSA_HANDLE); } catch (e) { console.warn("保存目录句柄失败", e); }
+    }
+    async function clearFsaHandle() {
+      try { await idbDelete(STORE_KV, KV_FSA_HANDLE); } catch (e) {}
+    }
+
     /* ========== 领域常量 ========== */
     const PERIODS = ["today", "week", "month"];
     const PRIORITIES = ["高", "中", "低"];
     const QUADRANTS = ["q1", "q2", "q3", "q4"];
+    const REPEAT_RULES = ["none", "daily", "weekly", "monthly", "yearly"];
+    const REPEAT_END_MODES = ["never", "until", "count"];
+    const WEEKDAY_LABELS = ["日", "一", "二", "三", "四", "五", "六"];
 
     const DEFAULT_MATRIX_ORDER = { q1: [], q2: [], q3: [], q4: [] };
 
@@ -2632,6 +2866,7 @@
       quadrantView: "matrix",
       autoArchiveDays: 0,
       autoCleanDays: 0,
+      autoFolderBackup: false,
       lastFullscreen: true,
       lastPriorityByQuadrant: { q1: "中", q2: "中", q3: "中", q4: "中" }
     };
@@ -2778,7 +3013,7 @@
     }
     function taskTypeLabel(value) { return value === "temporary" ? "临时事项" : "计划事项"; }
     function repeatLabel(value) {
-      return ({ none: "不重复", daily: "每天", weekly: "每周", monthly: "每月", weekdays: "每个工作日" })[value] || "不重复";
+      return ({ none: "不重复", daily: "每天", weekly: "每周", monthly: "每月", yearly: "每年" })[value] || "不重复";
     }
     function effortLabel(value) {
       return ({ lt30: "少于 30 分钟", "30to60": "30—60 分钟", "1to2h": "1—2 小时", gt2h: "2 小时以上" })[value] || "未记录";
@@ -2788,11 +3023,16 @@
       const n = Math.max(0, Math.min(100, Number(value) || 0));
       return Math.round(n / 10) * 10;
     }
+    function computeSubtaskProgress(subtasks) {
+      if (!Array.isArray(subtasks) || !subtasks.length) return 0;
+      const done = subtasks.filter((item) => item && item.done).length;
+      return Math.round((done / subtasks.length) * 100);
+    }
     function statusFromProgress(progress, archived = false) {
       if (archived) return "已归档";
-      const n = normalizeProgress(progress);
-      if (n === 100) return "已完成";
-      if (n >= 10) return "进行中";
+      const n = Math.max(0, Math.min(100, Number(progress) || 0));
+      if (n >= 100) return "已完成";
+      if (n >= 1) return "进行中";
       return "未开始";
     }
     function normalizeTags(value) {
@@ -2807,6 +3047,24 @@
       return tags;
     }
     function tagsToString(value) { return normalizeTags(value).join(", "); }
+
+    function normalizeSubtasks(value) {
+      if (!Array.isArray(value)) return [];
+      return value
+        .filter((item) => item && typeof item === "object")
+        .map((item) => ({
+          id: String(item.id || uniqueId("sub")),
+          title: String(item.title || "").trim(),
+          done: Boolean(item.done)
+        }))
+        .filter((item) => item.title)
+        .slice(0, 50);
+    }
+
+    function normalizeWeekdays(value) {
+      if (!Array.isArray(value)) return [];
+      return [...new Set(value.map((d) => Math.floor(Number(d))).filter((d) => d >= 0 && d <= 6))].sort((a, b) => a - b);
+    }
 
     function normalizeHistory(history) {
       if (!Array.isArray(history)) return [];
@@ -2825,11 +3083,13 @@
 
     function normalizeTask(task = {}) {
       const archived = Boolean(task.archived || task.status === "已归档");
-      const progress = normalizeProgress(task.progress);
+      const subtasks = normalizeSubtasks(task.subtasks);
+      const progress = subtasks.length ? computeSubtaskProgress(subtasks) : normalizeProgress(task.progress);
       const status = statusFromProgress(progress, archived);
       const date = parseISODate(task.date) ? task.date : localDateISO();
       const deadline = parseISODate(task.deadline) ? task.deadline : "";
       const scheduledDate = parseISODate(task.scheduledDate) ? task.scheduledDate : "";
+      const repeatRule = REPEAT_RULES.includes(task.repeatRule) ? task.repeatRule : "none";
 
       return {
         ...task,
@@ -2841,7 +3101,14 @@
         priority: PRIORITIES.includes(task.priority) ? task.priority : "中",
         quadrant: QUADRANTS.includes(task.quadrant) ? task.quadrant : "q2",
         progress, status, archived,
-        repeatRule: ["none", "daily", "weekly", "monthly", "weekdays"].includes(task.repeatRule) ? task.repeatRule : "none",
+        subtasks,
+        repeatRule,
+        repeatInterval: Math.max(1, Math.min(99, Math.floor(Number(task.repeatInterval) || 1))),
+        repeatWeekdays: normalizeWeekdays(task.repeatWeekdays),
+        repeatEndMode: REPEAT_END_MODES.includes(task.repeatEndMode) ? task.repeatEndMode : "never",
+        repeatEndDate: parseISODate(task.repeatEndDate) ? task.repeatEndDate : "",
+        repeatEndCount: Math.max(1, Math.min(999, Math.floor(Number(task.repeatEndCount) || 1))),
+        repeatDoneCount: Math.max(0, Math.floor(Number(task.repeatDoneCount) || 0)),
         repeatParentId: String(task.repeatParentId || ""),
         repeatGenerated: Boolean(task.repeatGenerated),
         effort: ["", "lt30", "30to60", "1to2h", "gt2h"].includes(task.effort) ? task.effort : "",
@@ -3008,6 +3275,7 @@
       merged.quadrantView = ["matrix", "card"].includes(merged.quadrantView) ? merged.quadrantView : "matrix";
       merged.autoArchiveDays = toNonNegativeInt(merged.autoArchiveDays);
       merged.autoCleanDays = toNonNegativeInt(merged.autoCleanDays);
+      merged.autoFolderBackup = Boolean(merged.autoFolderBackup);
       merged.lastFullscreen = merged.lastFullscreen !== false;
       merged.lastPriorityByQuadrant = {
         ...deepClone(DEFAULT_SETTINGS.lastPriorityByQuadrant),
@@ -3065,7 +3333,6 @@
       result.settings = normalizeSettings(source.settings);
       return result;
     }
-
     /* ========== 内存状态 ========== */
     let appData = createEmptyAppData();
     let tasks = appData.tasks;
@@ -3075,7 +3342,7 @@
     let reviewAnswers = appData.reviewAnswers;
     let settings = appData.settings;
 
-    let appMeta = { lastSnapshotDate: "", lastOverviewDate: "", lastExportDate: "", lastMaintenanceDate: "" };
+    let appMeta = { lastSnapshotDate: "", lastOverviewDate: "", lastExportDate: "", lastMaintenanceDate: "", lastFolderBackupDate: "" };
 
     let activeTaskPeriod = settings.defaultPeriod;
     let currentQuadrantView = settings.quadrantView;
@@ -3093,6 +3360,8 @@
     let undoTimer = 0;
     let reviewWeekDate = new Date();
     let taskPrefill = null;
+    let modalSubtasks = [];
+    let fsaDirHandle = null;
 
     const selectedTaskIds = new Set();
     const fullscreenPeriods = new Set([settings.defaultPeriod]);
@@ -3134,6 +3403,7 @@
       appData = migrateAppData(stored);
       assignStateFromAppData();
       await loadMeta();
+      try { fsaDirHandle = await loadFsaHandle(); } catch (e) { fsaDirHandle = null; }
     }
     let persistChain = Promise.resolve();
     function persistAppData(silent) {
@@ -3438,8 +3708,9 @@
       ],
       review: [
         { title: "复盘表导航", links: [
-          ["复盘问题清单", "#review-overview"], ["数据摘要", "#review-data-summary"], ["个人成长", "#review-personal-growth"],
-          ["目标与原则", "#review-goals-principles"], ["要事第一", "#review-first-things"], ["关系与协作", "#review-relationships"], ["持续更新", "#review-renewal"]
+          ["复盘问题清单", "#review-overview"], ["数据摘要", "#review-data-summary"], ["趋势图表", "#review-charts-card"],
+          ["个人成长", "#review-personal-growth"], ["目标与原则", "#review-goals-principles"], ["要事第一", "#review-first-things"],
+          ["关系与协作", "#review-relationships"], ["持续更新", "#review-renewal"]
         ] }
       ]
     };
@@ -3616,7 +3887,7 @@
       $("reviewWeekBadge").classList.toggle("hidden", isCurrent);
       $("reviewThisWeek").disabled = isCurrent;
     }
-    function renderReviewPage() { renderReviewWeek(); renderReviewSummary(); }
+    function renderReviewPage() { renderReviewWeek(); renderReviewSummary(); renderReviewCharts(); }
 
     function renderReviewHistoryList() {
       const host = $("reviewHistoryList");
@@ -3688,7 +3959,6 @@
       initTaskPanelSwipe();
       setTaskPanel(false);
     }
-
     /* 需求2：移动端要事抽屉手指下滑关闭 */
     function initTaskPanelSwipe() {
       const panel = $("workspace-task-panel");
@@ -3859,24 +4129,65 @@
       document.addEventListener("scroll", positionCalendar, { passive: true, capture: true });
     }
 
-    /* ========== 重复事项 ========== */
-    function nextRepeatDate(sourceDate, rule) {
-      const date = parseISODate(sourceDate) || new Date();
-      if (rule === "daily") return localDateISO(addDays(date, 1));
-      if (rule === "weekly") return localDateISO(addDays(date, 7));
-      if (rule === "monthly") return localDateISO(addMonths(date, 1));
-      if (rule === "weekdays") {
-        let next = addDays(date, 1);
-        while (next.getDay() === 0 || next.getDay() === 6) next = addDays(next, 1);
-        return localDateISO(next);
+    /* ========== 重复事项（方案 A：间隔 / 星期几 / 结束条件） ========== */
+    function repeatWeekdaysText(weekdays) {
+      const list = normalizeWeekdays(weekdays);
+      if (!list.length) return "";
+      return list.map((d) => `周${WEEKDAY_LABELS[d]}`).join("、");
+    }
+    function describeRepeat(task) {
+      if (!task || task.repeatRule === "none") return "不重复";
+      const interval = Math.max(1, task.repeatInterval || 1);
+      const unit = ({ daily: "天", weekly: "周", monthly: "个月", yearly: "年" })[task.repeatRule] || "";
+      let base = interval > 1 ? `每 ${interval} ${unit}` : `每${unit === "个月" ? "月" : unit}`;
+      if (task.repeatRule === "weekly") {
+        const wd = repeatWeekdaysText(task.repeatWeekdays);
+        if (wd) base += `（${wd}）`;
       }
+      if (task.repeatEndMode === "until" && task.repeatEndDate) base += ` · 至 ${task.repeatEndDate}`;
+      else if (task.repeatEndMode === "count") base += ` · 共 ${task.repeatEndCount} 次`;
+      return base;
+    }
+    function nextWeeklyDate(fromDate, weekdays, interval) {
+      const days = normalizeWeekdays(weekdays);
+      const targetDays = days.length ? days : [fromDate.getDay()];
+      const step = Math.max(1, interval);
+      if (step === 1) {
+        for (let i = 1; i <= 7; i++) {
+          const candidate = addDays(fromDate, i);
+          if (targetDays.includes(candidate.getDay())) return localDateISO(candidate);
+        }
+      }
+      const offsetFromMonday = (weekday) => (weekday + 6) % 7;
+      const mondayThisWeek = startOfWeek(fromDate);
+      const targetMonday = addDays(mondayThisWeek, step * 7);
+      const first = [...targetDays].sort((a, b) => offsetFromMonday(a) - offsetFromMonday(b))[0];
+      return localDateISO(addDays(targetMonday, offsetFromMonday(first)));
+    }
+    function nextRepeatBasisDate(fromISO, task) {
+      const date = parseISODate(fromISO) || new Date();
+      const interval = Math.max(1, task.repeatInterval || 1);
+      if (task.repeatRule === "daily") return localDateISO(addDays(date, interval));
+      if (task.repeatRule === "weekly") return nextWeeklyDate(date, task.repeatWeekdays, interval);
+      if (task.repeatRule === "monthly") return localDateISO(addMonths(date, interval));
+      if (task.repeatRule === "yearly") return localDateISO(addMonths(date, interval * 12));
       return "";
     }
     function generateNextRepeatedTask(task) {
       if (task.repeatRule === "none" || task.repeatGenerated !== false) return null;
+      if (task.repeatEndMode === "count" && (task.repeatDoneCount + 1) >= task.repeatEndCount) {
+        task.repeatGenerated = true;
+        addTaskHistory(task, `已完成第 ${task.repeatDoneCount + 1} 次，达到重复次数上限，停止重复`, "repeat");
+        return null;
+      }
       const basis = task.scheduledDate || task.deadline || task.date;
-      const nextBasis = nextRepeatDate(basis, task.repeatRule);
+      const nextBasis = nextRepeatBasisDate(basis, task);
       if (!nextBasis) return null;
+      if (task.repeatEndMode === "until" && task.repeatEndDate && nextBasis > task.repeatEndDate) {
+        task.repeatGenerated = true;
+        addTaskHistory(task, `下一次日期 ${nextBasis} 超过结束日期 ${task.repeatEndDate}，停止重复`, "repeat");
+        return null;
+      }
       const deadlineOffset = task.deadline && basis ? dateDifferenceInDays(task.deadline, basis) : null;
       const nextDeadline = task.deadline
         ? (deadlineOffset === null ? nextBasis : localDateISO(addDays(parseISODate(nextBasis), deadlineOffset)))
@@ -3885,7 +4196,9 @@
         ...deepClone(task), id: uniqueId("task"), date: localDateISO(),
         scheduledDate: task.scheduledDate ? nextBasis : "", deadline: nextDeadline,
         progress: 0, archived: false, archivedAt: "", startedAt: "", completedAt: "", completedSnapshot: null,
+        subtasks: (task.subtasks || []).map((item) => ({ id: uniqueId("sub"), title: item.title, done: false })),
         repeatParentId: task.repeatParentId || task.id, repeatGenerated: false,
+        repeatDoneCount: task.repeatDoneCount + 1,
         createdAt: Date.now(), updatedAt: Date.now(),
         history: [{ id: uniqueId("history"), time: currentDateTime(), type: "repeat",
           text: `由重复事项“${task.title}”自动生成`, fromQuadrant: "", toQuadrant: "" }]
@@ -3905,7 +4218,7 @@
         ["标题", "title", (v) => v], ["添加日期", "date", (v) => v || "未设置"],
         ["计划执行日期", "scheduledDate", (v) => v || "未设置"], ["截止日期", "deadline", (v) => v || "未设置"],
         ["周期", "period", periodLabel], ["事项性质", "taskType", taskTypeLabel], ["优先级", "priority", (v) => v],
-        ["象限", "quadrant", quadrantLabel], ["进度", "progress", (v) => `${v}%`], ["重复规则", "repeatRule", repeatLabel],
+        ["象限", "quadrant", quadrantLabel], ["进度", "progress", (v) => `${v}%`],
         ["实际投入", "effort", effortLabel], ["标签", "tags", (v) => v || "无"]
       ];
       fields.forEach(([label, key, fmt]) => {
@@ -3913,17 +4226,39 @@
           changes.push(`${label}：${fmt(oldTask[key])} → ${fmt(newTask[key])}`);
         }
       });
+      if (describeRepeat(oldTask) !== describeRepeat(newTask)) {
+        changes.push(`重复规则：${describeRepeat(oldTask)} → ${describeRepeat(newTask)}`);
+      }
+      const oldSubCount = (oldTask.subtasks || []).length;
+      const newSubCount = (newTask.subtasks || []).length;
+      if (oldSubCount !== newSubCount) changes.push(`子任务数量：${oldSubCount} → ${newSubCount}`);
       if (oldTask.note !== newTask.note) changes.push("更新了备注");
       return changes;
     }
 
+    function readRepeatFromForm() {
+      const rule = $("modalTaskRepeat").value;
+      const endMode = document.querySelector('input[name="repeatEnd"]:checked')?.value || "never";
+      const weekdays = $$("#repeatWeekdays .repeat-weekday.active").map((button) => Number(button.dataset.weekday));
+      return {
+        repeatRule: rule,
+        repeatInterval: Math.max(1, Math.min(99, Math.floor(Number($("modalRepeatInterval").value) || 1))),
+        repeatWeekdays: rule === "weekly" ? normalizeWeekdays(weekdays) : [],
+        repeatEndMode: endMode,
+        repeatEndDate: endMode === "until" ? ($("modalRepeatUntil").value || "") : "",
+        repeatEndCount: Math.max(1, Math.min(999, Math.floor(Number($("modalRepeatCount").value) || 1)))
+      };
+    }
+
     function buildTaskFromForm(oldTask = null) {
-      const progress = normalizeProgress($("modalTaskProgress").value);
+      const repeat = readRepeatFromForm();
+      const subtasks = normalizeSubtasks(modalSubtasks);
+      const progress = subtasks.length ? computeSubtaskProgress(subtasks) : normalizeProgress($("modalTaskProgress").value);
       const now = currentDateTime();
       let startedAt = oldTask?.startedAt || "";
       let completedAt = oldTask?.completedAt || "";
       let completedSnapshot = oldTask?.completedSnapshot || null;
-      if (progress >= 10 && !startedAt) startedAt = now;
+      if (progress >= 1 && !startedAt) startedAt = now;
       if (progress === 100) {
         if (!startedAt) startedAt = now;
         if (!oldTask || oldTask.progress !== 100 || !completedAt) completedAt = now;
@@ -3940,9 +4275,12 @@
         taskType: $("modalTaskType").value,
         priority: $("modalTaskPriority").value,
         quadrant: $("modalTaskQuadrant").value,
-        repeatRule: $("modalTaskRepeat").value,
         effort: $("modalTaskEffort").value,
-        progress,
+        progress, subtasks,
+        ...repeat,
+        repeatDoneCount: oldTask?.repeatDoneCount || 0,
+        repeatParentId: oldTask?.repeatParentId || "",
+        repeatGenerated: oldTask ? Boolean(oldTask.repeatGenerated) : false,
         tags: tagsToString($("modalTaskTags").value),
         note: $("modalTaskNote").value.trim(),
         archived: false, archivedAt: "", startedAt, completedAt, completedSnapshot,
@@ -3954,6 +4292,54 @@
           priority: task.priority, taskType: task.taskType, period: task.period };
       }
       return task;
+    }
+
+    /* 子任务编辑器（弹窗内内存态） */
+    function renderSubtaskEditor() {
+      const host = $("subtaskEditor");
+      if (!host) return;
+      host.innerHTML = modalSubtasks.map((item, index) => `
+        <div class="subtask-row ${item.done ? "done" : ""}" data-subtask-index="${index}">
+          <input type="checkbox" data-subtask-toggle="${index}" ${item.done ? "checked" : ""} aria-label="完成子任务">
+          <input type="text" maxlength="200" data-subtask-title="${index}" value="${escapeHTML(item.title)}" placeholder="子任务内容">
+          <button class="icon-button subtask-remove" type="button" data-subtask-remove="${index}" title="删除子任务" aria-label="删除子任务">${ICONS.remove}</button>
+        </div>`).join("");
+      updateProgressFieldVisibility();
+    }
+    function updateProgressFieldVisibility() {
+      const hasSubtasks = modalSubtasks.length > 0;
+      $("modalProgressField").classList.toggle("hidden", hasSubtasks);
+      const note = $("subtaskProgressNote");
+      if (hasSubtasks) {
+        const done = modalSubtasks.filter((item) => item.done).length;
+        note.textContent = `含子任务时进度自动按完成比例计算：${done}/${modalSubtasks.length}（${computeSubtaskProgress(modalSubtasks)}%）。`;
+      } else {
+        note.textContent = "未添加子任务时，使用上方进度条手动记录完成度。";
+      }
+    }
+    function addSubtaskFromInput() {
+      const input = $("modalSubtaskInput");
+      const title = input.value.trim();
+      if (!title) return;
+      modalSubtasks.push({ id: uniqueId("sub"), title, done: false });
+      input.value = "";
+      renderSubtaskEditor();
+      input.focus();
+    }
+
+    /* 重复详情面板 */
+    function updateRepeatDetail() {
+      const rule = $("modalTaskRepeat").value;
+      const active = rule !== "none";
+      $("repeatDetail").classList.toggle("active", active);
+      $("repeatWeekdaysLine").classList.toggle("hidden", rule !== "weekly");
+      const unitMap = { daily: "天", weekly: "周", monthly: "个月", yearly: "年" };
+      $("repeatIntervalUnit").textContent = unitMap[rule] || "";
+      updateRepeatSummary();
+    }
+    function updateRepeatSummary() {
+      const preview = normalizeTask({ ...readRepeatFromForm(), title: "预览", id: "preview" });
+      $("repeatSummary").textContent = preview.repeatRule === "none" ? "" : `规则：${describeRepeat(preview)}`;
     }
 
     function openTaskModal(taskId = "", quadrant = "q2", fromFullscreen = false, priority = "") {
@@ -3979,15 +4365,36 @@
       $("modalTaskType").value = task?.taskType || settings.defaultTaskType;
       $("modalTaskPriority").value = task?.priority || defaultPriority;
       $("modalTaskQuadrant").value = task?.quadrant || prefill?.quadrant || quadrant;
-      $("modalTaskRepeat").value = task?.repeatRule || "none";
       $("modalTaskEffort").value = task?.effort || "";
       $("modalTaskTags").value = task?.tags || prefill?.tags || "";
       $("modalTaskNote").value = task?.note || prefill?.note || "";
       setRangeValue($("modalTaskProgress"), $("modalTaskProgressValue"), task?.progress || 0);
 
+      // 重复规则
+      $("modalTaskRepeat").value = task?.repeatRule || "none";
+      $("modalRepeatInterval").value = String(task?.repeatInterval || 1);
+      const weekdays = normalizeWeekdays(task?.repeatWeekdays);
+      $$("#repeatWeekdays .repeat-weekday").forEach((button) => {
+        const active = weekdays.includes(Number(button.dataset.weekday));
+        button.classList.toggle("active", active);
+        button.setAttribute("aria-pressed", String(active));
+      });
+      const endMode = task?.repeatEndMode || "never";
+      const endRadio = document.querySelector(`input[name="repeatEnd"][value="${endMode}"]`);
+      if (endRadio) endRadio.checked = true;
+      $("modalRepeatUntil").value = task?.repeatEndDate || "";
+      $("modalRepeatCount").value = task?.repeatEndCount ? String(task.repeatEndCount) : "";
+      updateRepeatDetail();
+
+      // 子任务
+      modalSubtasks = (task?.subtasks || []).map((item) => ({ id: item.id || uniqueId("sub"), title: item.title, done: Boolean(item.done) }));
+      $("modalSubtaskInput").value = "";
+      renderSubtaskEditor();
+
       $("viewTaskHistory").classList.toggle("hidden", !task);
       $("archiveTaskButton").classList.toggle("hidden", !task);
       $("archiveTaskButton").textContent = task?.archived ? "取消归档" : "归档";
+      $("deleteTaskButton").classList.toggle("hidden", !task);
 
       const isRepeatTask = Boolean(task && task.repeatRule !== "none");
       $("skipRepeatButton").classList.toggle("hidden", !isRepeatTask);
@@ -4042,11 +4449,19 @@
       if (!task || task.archived) return;
       const before = allowUndo ? captureUndoSnapshot() : null;
       const oldProgress = task.progress;
-      const normalized = normalizeProgress(progress);
       const now = currentDateTime();
+      let normalized = normalizeProgress(progress);
+
+      // 有子任务：进度由子任务驱动，完成=全勾，恢复=全不勾
+      if (task.subtasks.length) {
+        const markDone = normalized === 100;
+        task.subtasks = task.subtasks.map((item) => ({ ...item, done: markDone }));
+        normalized = computeSubtaskProgress(task.subtasks);
+      }
+
       task.progress = normalized;
       task.status = statusFromProgress(normalized, false);
-      if (normalized >= 10 && !task.startedAt) task.startedAt = now;
+      if (normalized >= 1 && !task.startedAt) task.startedAt = now;
       if (normalized === 100) {
         if (!task.startedAt) task.startedAt = now;
         if (oldProgress !== 100 || !task.completedAt) task.completedAt = now;
@@ -4063,6 +4478,39 @@
         saveAppData();
         renderEverything();
         if (allowUndo) showUndoToast(`已将“${task.title}”进度调整为 ${normalized}%`, () => restoreUndoSnapshot(before));
+      }
+    }
+
+    /* 列表内直接勾选子任务 */
+    function toggleTaskSubtask(taskId, subId) {
+      const task = tasks.find((item) => item.id === taskId);
+      if (!task || task.archived) return;
+      const subtask = task.subtasks.find((item) => item.id === subId);
+      if (!subtask) return;
+      const before = captureUndoSnapshot();
+      const oldProgress = task.progress;
+      subtask.done = !subtask.done;
+      const normalized = computeSubtaskProgress(task.subtasks);
+      const now = currentDateTime();
+      task.progress = normalized;
+      task.status = statusFromProgress(normalized, false);
+      if (normalized >= 1 && !task.startedAt) task.startedAt = now;
+      if (normalized === 100) {
+        if (!task.startedAt) task.startedAt = now;
+        if (oldProgress !== 100 || !task.completedAt) task.completedAt = now;
+        task.completedSnapshot = { completedAt: task.completedAt, deadline: task.deadline, quadrant: task.quadrant,
+          priority: task.priority, taskType: task.taskType, period: task.period };
+        addTaskHistory(task, `子任务“${subtask.title}”完成，事项已完成`, "complete");
+        generateNextRepeatedTask(task);
+      } else {
+        task.completedAt = ""; task.completedSnapshot = null;
+        addTaskHistory(task, `${subtask.done ? "勾选" : "取消"}子任务“${subtask.title}”，进度 ${normalized}%`, "progress");
+      }
+      task.updatedAt = Date.now();
+      saveAppData();
+      renderEverything();
+      if (normalized === 100 && oldProgress !== 100) {
+        showUndoToast(`已完成“${task.title}”`, () => restoreUndoSnapshot(before));
       }
     }
 
@@ -4107,13 +4555,23 @@
       archiveTasks([id], !task.archived);
     }
 
+    function deleteCurrentTask() {
+      const id = $("modalTaskId").value;
+      if (!id) return;
+      const task = tasks.find((item) => item.id === id);
+      if (!task) return;
+      closeTaskModal();
+      deleteTasks([id]);
+    }
+
     /* ========== 事项筛选、排序、统计 ========== */
     function taskTextMatches(task, keyword) {
       const query = String(keyword).trim().toLocaleLowerCase();
       if (!query) return true;
       return [task.title, task.date, task.scheduledDate, task.deadline, periodLabel(task.period),
         taskTypeLabel(task.taskType), task.priority, quadrantLabel(task.quadrant), task.status,
-        repeatLabel(task.repeatRule), effortLabel(task.effort), task.tags, task.note]
+        repeatLabel(task.repeatRule), effortLabel(task.effort), task.tags, task.note,
+        ...task.subtasks.map((item) => item.title)]
         .join(" ").toLocaleLowerCase().includes(query);
     }
     function periodMatches(task) { return activeTaskPeriod === "all" || task.period === activeTaskPeriod; }
@@ -4229,6 +4687,7 @@
         const visualClass = settings.deadlineHighlight
           ? (deadline.overdue ? "overdue" : deadline.dueToday ? "due-today" : "") : "";
         const selected = selectedTaskIds.has(task.id);
+        const subtaskDone = task.subtasks.filter((item) => item.done).length;
         return `
           <article class="task-item ${task.status === "已完成" ? "done" : ""} ${task.archived ? "archived" : ""} ${visualClass} ${selected ? "selected" : ""}" data-task-item-id="${escapeHTML(task.id)}">
             <div class="task-title-row">
@@ -4254,9 +4713,15 @@
               <span class="tag">${escapeHTML(quadrantLabel(task.quadrant))}</span>
               <span class="tag">优先级：${escapeHTML(task.priority)}</span>
               <span class="tag ${task.archived ? "archived" : task.status === "已完成" ? "success" : ""}">${escapeHTML(task.status)}</span>
-              ${task.repeatRule !== "none" ? `<span class="tag">${escapeHTML(repeatLabel(task.repeatRule))}</span>` : ""}
+              ${task.subtasks.length ? `<span class="tag">子任务 ${subtaskDone}/${task.subtasks.length}</span>` : ""}
+              ${task.repeatRule !== "none" ? `<span class="tag">${escapeHTML(describeRepeat(task))}</span>` : ""}
             </div>
             ${normalizeTags(task.tags).length ? `<div class="task-meta">${normalizeTags(task.tags).map((tag) => `<button class="tag task-tag-filter" type="button" data-task-tag="${escapeHTML(tag)}" title="按标签筛选">${escapeHTML(tag)}</button>`).join("")}</div>` : ""}
+            ${task.subtasks.length ? `<div class="task-subtasks">${task.subtasks.map((item) => `
+              <label class="task-subtask-item ${item.done ? "done" : ""}">
+                <input type="checkbox" data-subtask-task="${escapeHTML(task.id)}" data-subtask-id="${escapeHTML(item.id)}" ${item.done ? "checked" : ""} ${task.archived ? "disabled" : ""}>
+                <span>${escapeHTML(item.title)}</span>
+              </label>`).join("")}</div>` : ""}
             ${task.note ? `<p class="task-note">备注：${escapeHTML(task.note)}</p>` : ""}
             ${task.effort ? `<p class="task-note">实际投入：${escapeHTML(effortLabel(task.effort))}</p>` : ""}
             <div class="progress"><div class="progress-bar" style="width:${task.progress}%"></div></div>
@@ -4288,6 +4753,8 @@
         } else if (actionButton.classList.contains("delete-task")) deleteTasks([id]);
       });
       list.addEventListener("change", (event) => {
+        const subtaskBox = event.target.closest("[data-subtask-task]");
+        if (subtaskBox) { toggleTaskSubtask(subtaskBox.dataset.subtaskTask, subtaskBox.dataset.subtaskId); return; }
         const checkbox = event.target.closest(".task-select");
         if (!checkbox) return;
         const id = checkbox.dataset.selectTask;
@@ -4309,6 +4776,7 @@
       renderTaskList();
       renderAllMatrices();
       renderReviewSummary();
+      renderReviewCharts();
       renderTagSuggestions();
       updateBackupReminder();
       if ($("startupOverviewModal").classList.contains("active")) renderStartupOverview();
@@ -4331,6 +4799,7 @@
     }
 
     function createMatrix() { return $("matrixTemplate").content.firstElementChild.cloneNode(true); }
+
     function mountMatrices() {
       $("normalMatrixHost").replaceChildren(createMatrix());
       $("fullscreenMatrixHost").replaceChildren(createMatrix());
@@ -4343,6 +4812,7 @@
       if (isFullscreen) return fullscreenPeriods.has(task.period);
       return true;
     }
+
     function getMatrixVisualClass(task) {
       if (!settings.deadlineHighlight) return "";
       const info = deadlineInfo(task);
@@ -4350,6 +4820,7 @@
       if (info.dueToday) return "due-today";
       return "";
     }
+
     function renderAllMatrices() { $$(".matrix-shell").forEach(renderMatrix); updateFullscreenPeriodButtons(); }
 
     function renderMatrix(shell) {
@@ -4365,10 +4836,15 @@
             visibleTasks.filter((task) => task.quadrant === quadrant && task.priority === priority), sortMode, quadrant);
           return `
             <div class="matrix-priority-group" data-quadrant="${quadrant}" data-priority="${priority}" data-priority-hint="${priority}优先级" aria-label="${priority}优先级区域">
-              ${priorityTasks.map((task) => `
-                <div class="matrix-task ${getMatrixVisualClass(task)}" draggable="true" tabindex="0" role="button" data-task-id="${escapeHTML(task.id)}" aria-label="编辑要事：${escapeHTML(task.title)}">
+              ${priorityTasks.map((task) => {
+                const subCount = task.subtasks.length;
+                const subDone = task.subtasks.filter((item) => item.done).length;
+                return `
+                <div class="matrix-task ${getMatrixVisualClass(task)}" draggable="true" tabindex="0" role="button" data-task-id="${escapeHTML(task.id)}" style="--task-progress:${task.progress}%" aria-label="编辑要事：${escapeHTML(task.title)}">
                   <span class="matrix-task-title">${escapeHTML(task.title)}</span>
-                </div>`).join("")}
+                  ${subCount ? `<span class="matrix-subcount">${subDone}/${subCount}</span>` : ""}
+                </div>`;
+              }).join("")}
             </div>`;
         }).join("");
         addSlot.innerHTML = `
@@ -4379,6 +4855,8 @@
 
     function tooltipContent(task) {
       const deadline = deadlineInfo(task);
+      const subCount = task.subtasks.length;
+      const subDone = task.subtasks.filter((item) => item.done).length;
       return `
         <strong>${escapeHTML(task.title)}</strong>
         <p>添加日期：${escapeHTML(task.date)}</p>
@@ -4388,7 +4866,8 @@
         <p>事项性质：${escapeHTML(taskTypeLabel(task.taskType))}</p>
         <p>优先级：${escapeHTML(task.priority)}</p>
         <p>状态：${escapeHTML(task.status)}</p>
-        <p>进度：${task.progress}%</p>
+        <p>进度：${task.progress}%${subCount ? `（子任务 ${subDone}/${subCount}）` : ""}</p>
+        ${task.repeatRule !== "none" ? `<p>重复：${escapeHTML(describeRepeat(task))}</p>` : ""}
         <p>开始时间：${escapeHTML(task.startedAt || "尚未开始")}</p>
         <p>标签：${escapeHTML(task.tags || "无")}</p>
         <p>备注：${escapeHTML(task.note || "无")}</p>`;
@@ -4411,7 +4890,6 @@
       tooltip.style.top = `${Math.max(8, top)}px`;
     }
     function hideTooltip() { $("matrixTooltip").classList.remove("visible"); }
-
     /* ========== 触摸端坐标轴操作面板 ========== */
     let taskActionSheet = null;
     function ensureTaskActionSheet() {
@@ -4434,12 +4912,15 @@
       if (!task) return;
       const sheet = ensureTaskActionSheet();
       sheet.querySelector(".task-sheet-info").innerHTML = tooltipContent(task);
+      const hasSubtasks = task.subtasks.length > 0;
       const nextProgress = Math.min(100, task.progress + 10);
       sheet.querySelector(".task-sheet-actions").innerHTML = `
         <button class="btn primary block" data-sheet-action="edit" type="button">编辑要事</button>
         <div class="task-sheet-row">
-          <button class="btn" data-sheet-action="progress" type="button">进度 +10%</button>
-          <button class="btn success" data-sheet-action="complete" type="button">标记完成</button>
+          ${hasSubtasks
+            ? `<button class="btn success" style="grid-column:1/-1" data-sheet-action="complete" type="button">标记完成</button>`
+            : `<button class="btn" data-sheet-action="progress" type="button">进度 +10%</button>
+               <button class="btn success" data-sheet-action="complete" type="button">标记完成</button>`}
         </div>
         <div class="task-sheet-row">
           <button class="btn" data-sheet-action="move" type="button">移动</button>
@@ -4652,7 +5133,6 @@
       fullscreenControlsTimer = window.setTimeout(hideFullscreenControls, 2600);
     }
 
-    /* 需求5：旋转提示只提示一次、3 秒消失 */
     function showRotateHintOnce() {
       const host = $("matrixPageFullscreen");
       window.clearTimeout(rotateHintTimer);
@@ -4801,6 +5281,8 @@
       if (!task || task.repeatRule === "none") return;
       const before = captureUndoSnapshot();
       task.repeatRule = "none";
+      task.repeatWeekdays = [];
+      task.repeatEndMode = "never";
       task.updatedAt = Date.now();
       addTaskHistory(task, "已停止重复", "repeat");
       saveAppData();
@@ -4876,11 +5358,13 @@
             <div class="startup-list">
               ${list.length ? list.map((task) => {
                 const deadline = deadlineInfo(task);
+                const subCount = task.subtasks.length;
+                const subDone = task.subtasks.filter((item) => item.done).length;
                 return `
                   <article class="startup-task ${deadline.overdue ? "overdue" : ""}" tabindex="0" role="button" data-startup-task="${escapeHTML(task.id)}" aria-label="编辑事项：${escapeHTML(task.title)}">
                     <div class="startup-task-title">${escapeHTML(task.title)}</div>
                     <div class="startup-task-meta">
-                      <span>进度：${task.progress}%</span>
+                      <span>进度：${task.progress}%${subCount ? `（子任务 ${subDone}/${subCount}）` : ""}</span>
                       <span>象限：${escapeHTML(quadrantLabel(task.quadrant))}</span>
                       <span>截止日期：${escapeHTML(task.deadline || "未设置")}</span>
                       <span class="${deadline.overdue ? "danger-text" : ""}">${escapeHTML(deadline.text)}</span>
@@ -5202,14 +5686,67 @@
       $("reviewQ2ToQ1").textContent = q2ToQ1;
     }
 
+    /* ========== 复盘图表（纯 SVG） ========== */
+    function weeksBack(count) {
+      const arr = [], thisMonday = startOfWeek(new Date());
+      for (let i = count - 1; i >= 0; i--) arr.push(addDays(thisMonday, -i * 7));
+      return arr;
+    }
+    function renderReviewCharts() { renderTrendChart(); renderQuadrantChart(); }
+    function renderTrendChart() {
+      const host = $("reviewTrendChart");
+      if (!host) return;
+      const mondays = weeksBack(8);
+      const points = mondays.map((monday) => {
+        const monISO = localDateISO(monday), sunISO = localDateISO(addDays(monday, 6));
+        const inWeek = tasks.filter((t) => !t.archived && t.date >= monISO && t.date <= sunISO);
+        const done = inWeek.filter((t) => t.status === "已完成").length;
+        return { label: `${monday.getMonth() + 1}/${monday.getDate()}`, rate: inWeek.length ? Math.round((done / inWeek.length) * 100) : 0, total: inWeek.length };
+      });
+      if (!points.some((p) => p.total > 0)) { host.innerHTML = '<div class="chart-empty">近 8 周暂无事项数据。</div>'; return; }
+      const W = 320, H = 180, padL = 30, padR = 12, padT = 14, padB = 26;
+      const innerW = W - padL - padR, innerH = H - padT - padB;
+      const x = (i) => padL + (points.length === 1 ? innerW / 2 : (innerW * i) / (points.length - 1));
+      const y = (v) => padT + innerH * (1 - v / 100);
+      const grid = [0, 25, 50, 75, 100].map((v) =>
+        `<line class="chart-grid-line" x1="${padL}" y1="${y(v).toFixed(1)}" x2="${W - padR}" y2="${y(v).toFixed(1)}"></line>
+         <text class="chart-label" x="${padL - 5}" y="${(y(v) + 3).toFixed(1)}" text-anchor="end">${v}</text>`).join("");
+      const linePath = points.map((p, i) => `${i === 0 ? "M" : "L"}${x(i).toFixed(1)},${y(p.rate).toFixed(1)}`).join(" ");
+      const areaPath = `${linePath} L${x(points.length - 1).toFixed(1)},${y(0).toFixed(1)} L${x(0).toFixed(1)},${y(0).toFixed(1)} Z`;
+      const dots = points.map((p, i) =>
+        `<circle class="chart-dot" cx="${x(i).toFixed(1)}" cy="${y(p.rate).toFixed(1)}" r="3"><title>${p.label}：完成率 ${p.rate}%（${p.total} 项）</title></circle>
+         <text class="chart-label" x="${x(i).toFixed(1)}" y="${H - padB + 16}" text-anchor="middle">${p.label}</text>`).join("");
+      host.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="近 8 周完成率趋势">
+        ${grid}<path class="chart-area" d="${areaPath}"></path><path class="chart-line" d="${linePath}"></path>${dots}</svg>`;
+    }
+    function renderQuadrantChart() {
+      const host = $("reviewQuadrantChart");
+      if (!host) return;
+      const counts = QUADRANTS.map((q) => tasks.filter((t) => !t.archived && t.status !== "已完成" && t.quadrant === q).length);
+      if (!counts.some((c) => c > 0)) { host.innerHTML = '<div class="chart-empty">当前没有未完成事项。</div>'; return; }
+      const max = Math.max(1, ...counts), roman = ["Ⅰ", "Ⅱ", "Ⅲ", "Ⅳ"];
+      const W = 320, H = 180, padL = 20, padR = 12, padT = 16, padB = 34;
+      const innerW = W - padL - padR, innerH = H - padT - padB, gap = innerW / 4, barW = gap * 0.52;
+      const bars = counts.map((c, i) => {
+        const cx = padL + gap * i + gap / 2;
+        const barH = innerH * (c / max), top = padT + innerH - barH;
+        return `<rect class="chart-bar-q${i + 1}" x="${(cx - barW / 2).toFixed(1)}" y="${top.toFixed(1)}" width="${barW.toFixed(1)}" height="${Math.max(barH, 0).toFixed(1)}" rx="3"><title>${quadrantLabel(QUADRANTS[i])}：${c} 项</title></rect>
+          <text class="chart-value" x="${cx.toFixed(1)}" y="${(top - 5).toFixed(1)}" text-anchor="middle">${c}</text>
+          <text class="chart-label" x="${cx.toFixed(1)}" y="${(H - padB + 18).toFixed(1)}" text-anchor="middle">${roman[i]}</text>`;
+      }).join("");
+      host.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="未完成事项四象限分布">
+        <line class="chart-axis" x1="${padL}" y1="${(padT + innerH).toFixed(1)}" x2="${W - padR}" y2="${(padT + innerH).toFixed(1)}"></line>${bars}</svg>`;
+    }
+
     /* ========== CSV 导出 ========== */
     function createCSVContent(list) {
       const headers = ["事项标题", "事项性质", "周期分类", "添加日期", "计划执行日期", "截止日期", "截止状态",
-        "四象限", "优先级", "完成状态", "进度", "重复规则", "实际投入", "标签", "备注", "开始时间", "完成时间", "归档时间", "变更记录数"];
+        "四象限", "优先级", "完成状态", "进度", "子任务完成", "重复规则", "实际投入", "标签", "备注", "开始时间", "完成时间", "归档时间", "变更记录数"];
       const rows = list.map((task) => [
         task.title, taskTypeLabel(task.taskType), periodLabel(task.period), task.date, task.scheduledDate,
         task.deadline, deadlineInfo(task).text, quadrantLabel(task.quadrant), task.priority, task.status,
-        `${task.progress}%`, repeatLabel(task.repeatRule), effortLabel(task.effort), task.tags, task.note,
+        `${task.progress}%`, task.subtasks.length ? `${task.subtasks.filter((s) => s.done).length}/${task.subtasks.length}` : "无",
+        describeRepeat(task), effortLabel(task.effort), task.tags, task.note,
         task.startedAt, task.completedAt, task.archivedAt, task.history.length
       ]);
       function escapeCSVCell(value) {
@@ -5224,6 +5761,80 @@
       downloadBlob(new Blob([createCSVContent(list)], { type: "text/csv;charset=utf-8;" }), `${filePrefix}_${localDateISO()}.csv`);
     }
 
+    /* ========== 文件夹半自动备份（File System Access，自动降级） ========== */
+    function fsaSupported() { return typeof window.showDirectoryPicker === "function"; }
+    async function verifyFsaPermission(handle, write = true) {
+      if (!handle) return false;
+      const opts = { mode: write ? "readwrite" : "read" };
+      try {
+        if ((await handle.queryPermission(opts)) === "granted") return true;
+        if ((await handle.requestPermission(opts)) === "granted") return true;
+      } catch (e) {}
+      return false;
+    }
+    async function chooseFsaFolder() {
+      if (!fsaSupported()) { window.alert("当前浏览器不支持文件夹备份，请使用桌面版 Chrome / Edge，或改用“导出完整 JSON”。"); return; }
+      try {
+        const handle = await window.showDirectoryPicker({ id: "sevenHabitsBackup", mode: "readwrite" });
+        if (!(await verifyFsaPermission(handle, true))) { window.alert("未获得文件夹写入权限。"); return; }
+        fsaDirHandle = handle;
+        await saveFsaHandle(handle);
+        renderFsaStatus();
+        showUndoToast("已授权备份文件夹。", null, 3000);
+      } catch (e) { if (e && e.name !== "AbortError") console.warn("选择文件夹失败", e); }
+    }
+    async function writeBackupToFolder(options = {}) {
+      const { automatic = false, silent = false } = options;
+      if (!fsaDirHandle) { if (!automatic) window.alert("请先选择备份文件夹。"); return false; }
+      if (!(await verifyFsaPermission(fsaDirHandle, true))) { if (!automatic) window.alert("没有文件夹写入权限，请重新授权。"); return false; }
+      try {
+        const fileHandle = await fsaDirHandle.getFileHandle("七个习惯工作台_备份.json", { create: true });
+        const writable = await fileHandle.createWritable();
+        await writable.write(JSON.stringify(buildBackupData(), null, 2));
+        await writable.close();
+        markExported();
+        appMeta.lastFolderBackupDate = localDateISO();
+        saveMeta();
+        renderFsaStatus();
+        if (!silent) showUndoToast("已备份到授权文件夹。", null, 3500);
+        return true;
+      } catch (e) {
+        console.warn("写入文件夹失败", e);
+        if (!automatic) window.alert("写入备份文件失败，请重新授权或改用“导出完整 JSON”。");
+        return false;
+      }
+    }
+    async function forgetFsaFolder() { fsaDirHandle = null; await clearFsaHandle(); renderFsaStatus(); }
+    function renderFsaStatus() {
+      const status = $("fsaStatus");
+      if (!status) return;
+      if (!fsaSupported()) {
+        $("fsaChooseFolder").disabled = true;
+        $("fsaBackupNow").disabled = true;
+        $("fsaForget").disabled = true;
+        $("settingAutoFolderBackup").disabled = true;
+        $("settingAutoFolderBackup").checked = false;
+        status.innerHTML = "当前浏览器不支持文件夹备份（File System Access API），已自动降级：请使用上方“导出完整 JSON”。";
+        return;
+      }
+      $("fsaChooseFolder").disabled = false;
+      $("fsaBackupNow").disabled = false;
+      $("settingAutoFolderBackup").disabled = false;
+      if (fsaDirHandle) {
+        $("fsaForget").disabled = false;
+        status.innerHTML = `备份文件夹：<span class="fsa-folder-name">${escapeHTML(fsaDirHandle.name || "已授权文件夹")}</span> · 文件：七个习惯工作台_备份.json` +
+          (appMeta.lastFolderBackupDate ? ` · 上次文件夹备份：${escapeHTML(appMeta.lastFolderBackupDate)}` : " · 尚未备份");
+      } else {
+        $("fsaForget").disabled = true;
+        status.textContent = "尚未授权备份文件夹。";
+      }
+    }
+    async function autoFolderBackupIfNeeded() {
+      if (!settings.autoFolderBackup || !fsaSupported() || !fsaDirHandle) return;
+      if (appMeta.lastFolderBackupDate === localDateISO()) return;
+      await writeBackupToFolder({ automatic: true, silent: true });
+    }
+
     /* ========== 设置 ========== */
     function showSettingsPane(name) {
       $$("[data-settings-pane]").forEach((button) => button.classList.toggle("active", button.dataset.settingsPane === name));
@@ -5231,6 +5842,7 @@
       if (name === "snapshots") renderSnapshotList();
       if (name === "storage") renderStorageHealth();
       if (name === "maintenance") renderMaintenanceInfo();
+      if (name === "data") renderFsaStatus();
     }
     function applySettingsToUI() {
       settings = normalizeSettings(settings);
@@ -5244,6 +5856,8 @@
       $("settingQuadrantView").value = settings.quadrantView;
       $("settingAutoArchiveDays").value = String(settings.autoArchiveDays);
       $("settingAutoCleanDays").value = String(settings.autoCleanDays);
+      $("settingAutoFolderBackup").checked = settings.autoFolderBackup;
+      renderFsaStatus();
       activeTaskPeriod = PERIODS.includes(activeTaskPeriod) ? activeTaskPeriod : settings.defaultPeriod;
       $$(".period-tabs [data-period]").forEach((button) => button.classList.toggle("primary", button.dataset.period === activeTaskPeriod));
       setQuadrantView(settings.quadrantView);
@@ -5259,6 +5873,7 @@
       settings.quadrantView = $("settingQuadrantView").value;
       settings.autoArchiveDays = toNonNegativeInt($("settingAutoArchiveDays").value);
       settings.autoCleanDays = toNonNegativeInt($("settingAutoCleanDays").value);
+      settings.autoFolderBackup = $("settingAutoFolderBackup").checked;
       applyTheme(settings.theme);
       saveAppData();
       renderEverything();
@@ -5382,6 +5997,7 @@
       if (!parseable) level = "error"; else if (dangling > 0) level = "warning";
       return { parseable, megabytes: bytes / 1024 / 1024, dangling, level };
     }
+    
     function renderStorageHealth() {
       const host = $("storageHealth");
       if (!host) return;
@@ -5478,6 +6094,7 @@
       $("closeTaskModal").addEventListener("click", closeTaskModal);
       $("cancelTaskModal").addEventListener("click", closeTaskModal);
       $("archiveTaskButton").addEventListener("click", toggleArchiveCurrentTask);
+      $("deleteTaskButton").addEventListener("click", deleteCurrentTask);
       $("skipRepeatButton").addEventListener("click", skipRepeatCurrentTask);
       $("stopRepeatButton").addEventListener("click", stopRepeatCurrentTask);
       $("viewTaskHistory").addEventListener("click", () => {
@@ -5485,6 +6102,48 @@
         if (id) openTaskHistory(id);
       });
       $("taskModal").addEventListener("click", (event) => { if (event.target === event.currentTarget) closeTaskModal(); });
+
+      // 重复规则详情面板
+      $("modalTaskRepeat").addEventListener("change", updateRepeatDetail);
+      $("modalRepeatInterval").addEventListener("input", updateRepeatSummary);
+      $("modalRepeatCount").addEventListener("input", () => {
+        const countRadio = document.querySelector('input[name="repeatEnd"][value="count"]');
+        if (countRadio && document.activeElement === $("modalRepeatCount")) countRadio.checked = true;
+        updateRepeatSummary();
+      });
+      $("repeatWeekdays").addEventListener("click", (event) => {
+        const button = event.target.closest(".repeat-weekday");
+        if (!button) return;
+        const active = button.classList.toggle("active");
+        button.setAttribute("aria-pressed", String(active));
+        updateRepeatSummary();
+      });
+      $$('input[name="repeatEnd"]').forEach((radio) => radio.addEventListener("change", updateRepeatSummary));
+      $("modalRepeatUntil").addEventListener("change", () => {
+        if ($("modalRepeatUntil").value) {
+          const untilRadio = document.querySelector('input[name="repeatEnd"][value="until"]');
+          if (untilRadio) untilRadio.checked = true;
+        }
+        updateRepeatSummary();
+      });
+
+      // 子任务编辑器
+      $("addSubtaskButton").addEventListener("click", addSubtaskFromInput);
+      $("modalSubtaskInput").addEventListener("keydown", (event) => {
+        if (event.key === "Enter") { event.preventDefault(); addSubtaskFromInput(); }
+      });
+      $("subtaskEditor").addEventListener("click", (event) => {
+        const removeButton = event.target.closest("[data-subtask-remove]");
+        if (removeButton) { modalSubtasks.splice(Number(removeButton.dataset.subtaskRemove), 1); renderSubtaskEditor(); }
+      });
+      $("subtaskEditor").addEventListener("change", (event) => {
+        const toggle = event.target.closest("[data-subtask-toggle]");
+        if (toggle) { modalSubtasks[Number(toggle.dataset.subtaskToggle)].done = toggle.checked; renderSubtaskEditor(); }
+      });
+      $("subtaskEditor").addEventListener("input", (event) => {
+        const titleInput = event.target.closest("[data-subtask-title]");
+        if (titleInput) modalSubtasks[Number(titleInput.dataset.subtaskTitle)].title = titleInput.value;
+      });
 
       $("closeStartupOverview").addEventListener("click", closeStartupOverview);
       $("confirmStartupOverview").addEventListener("click", closeStartupOverview);
@@ -5540,13 +6199,17 @@
       });
       ["settingTheme", "settingDefaultPeriod", "settingDefaultTaskType", "settingDefaultPriority",
         "settingDeadlineHighlight", "settingStartupOverview", "settingAfterOverview", "settingQuadrantView",
-        "settingAutoArchiveDays", "settingAutoCleanDays"].forEach((id) => {
+        "settingAutoArchiveDays", "settingAutoCleanDays", "settingAutoFolderBackup"].forEach((id) => {
         $(id).addEventListener("change", saveSettingsFromUI);
       });
       $("openTagManager").addEventListener("click", openTagManagerModal);
       $("runMaintenanceNow").addEventListener("click", () => runMaintenance({ manual: true }));
       $("exportBackupJSON").addEventListener("click", () => exportBackupJSON());
       $("exportAllTasksCSV").addEventListener("click", () => exportCSVList(tasks, "要事第一工作台_全部事项"));
+
+      $("fsaChooseFolder").addEventListener("click", chooseFsaFolder);
+      $("fsaBackupNow").addEventListener("click", () => writeBackupToFolder());
+      $("fsaForget").addEventListener("click", forgetFsaFolder);
 
       $("importBackupFile").addEventListener("change", (event) => {
         const file = event.target.files?.[0];
@@ -5626,6 +6289,7 @@
       { label: "设置与数据", run: () => openSettingsModal() },
       { label: "导出完整 JSON 备份", run: () => exportBackupJSON() },
       { label: "导出全部事项 CSV", run: () => exportCSVList(tasks, "要事第一工作台_全部事项") },
+      { label: "备份到授权文件夹", run: () => writeBackupToFolder() },
       { label: "切换深色 / 浅色主题", run: () => {
         const current = resolveTheme(settings.theme);
         settings.theme = current === "dark" ? "light" : "dark";
@@ -5748,12 +6412,11 @@
       fullscreenPeriods.add(period);
     }
     function initUndo() { $("undoButton").addEventListener("click", executeUndo); }
-    function initializeReviewRange() { $("reviewSummaryRange").addEventListener("change", renderReviewSummary); }
+    function initializeReviewRange() { $("reviewSummaryRange").addEventListener("change", () => { renderReviewSummary(); renderReviewCharts(); }); }
     function initializeFullscreen() {
       $("matrixFullscreenExit").addEventListener("click", exitMatrixFullscreen);
       $("matrixFsExitFloating").addEventListener("click", exitMatrixFullscreen);
       initFullscreenPeriodButtons();
-      // 需求3：全屏浮层圆形图标按钮切换周期
       $$(".matrix-fs-period-btn").forEach((button) => {
         button.addEventListener("click", () => {
           const period = button.dataset.fsPeriod;
@@ -5764,7 +6427,6 @@
           if (window.matchMedia("(pointer: coarse)").matches) autoHideFullscreenControls();
         });
       });
-      // 触摸设备：点全屏空白处切换浮层控件（周期切换 + 退出全屏）
       $("matrixPageFullscreen").addEventListener("click", (event) => {
         if (!window.matchMedia("(pointer: coarse)").matches) return;
         if (event.target.closest(".matrix-task,.add-matrix-task,.matrix-fs-top,button,select,input")) return;
@@ -5829,6 +6491,9 @@
       renderEverything();
       updateSaveStatus("saved", "已保存");
       initializeInitialView();
+
+      try { await autoFolderBackupIfNeeded(); }
+      catch (error) { console.warn("自动文件夹备份失败", error); }
     });
   </script>
 </body>
