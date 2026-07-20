@@ -3,18 +3,163 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="习惯">
+  <meta name="description" content="《高效能人士的七个习惯》知识库、要事第一工作台与复盘问题清单">
   <meta name="theme-color" content="#f7f5f1">
   <meta name="color-scheme" content="light dark">
-  <title>习惯</title>
+  
+  <title>《高效能人士的七个习惯》知识库与工作台</title>
+
+  <!-- 网站图标与 Safari 主屏幕图标 -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="要事第一">
+
+  <!-- 链接会由下方脚本写入，无须额外创建图片文件 -->
+  <link id="siteFavicon" rel="icon" type="image/svg+xml">
+  <link id="siteShortcutIcon" rel="shortcut icon">
+  <link id="siteAppleTouchIcon" rel="apple-touch-icon" sizes="180x180">
+  <link id="siteManifest" rel="manifest">
 
   <script>
-    /* 提前应用主题，避免深色模式首屏闪白 */
+    (function () {
+      const APP_ICON_SVG = `
+        <svg
+          width="1024"
+          height="1024"
+          viewBox="0 0 1024 1024"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <rect
+            width="1024"
+            height="1024"
+            rx="220"
+            ry="220"
+            fill="url(#appIconGradient)"
+          />
+          <path
+            d="M775.257 463.301C788.287 522.23 782.094 583.784 757.586 638.936C733.078 694.089 691.545 739.938 639.076 769.762C586.607 799.586 525.964 811.815 466.037 804.657C406.11 797.498 350.054 771.327 306.087 729.983C262.12 688.639 232.556 634.296 221.729 574.922C210.903 515.548 219.384 454.268 245.929 400.066C272.473 345.864 315.685 301.593 369.228 273.744C422.771 245.894 483.828 235.932 543.447 245.318L614.91 171.656C535.397 145.673 449.436 147.333 370.986 176.365C292.535 205.397 226.203 260.096 182.76 331.581C139.317 403.065 121.314 487.137 131.677 570.142C142.039 653.148 180.157 730.214 239.84 788.824C299.524 847.435 377.268 884.148 460.448 893.003C543.628 901.858 627.359 882.333 698.044 837.601C768.729 792.868 822.216 725.554 849.82 646.59C877.424 567.626 877.524 481.649 850.103 402.621L775.257 463.301ZM796.95 143.029C799.022 166.032 801.178 188.993 802.912 212.039C802.771 213.408 802.943 214.791 803.415 216.085C803.887 217.378 804.646 218.547 805.636 219.504C806.625 220.461 807.819 221.18 809.127 221.609C810.435 222.037 811.824 222.162 813.188 221.976C849.807 224.936 886.384 228.361 923.13 231.702C926.081 231.267 929.093 231.801 931.714 233.224C930.787 235.792 929.031 237.979 926.725 239.44L792.171 374.331C790.529 376.241 788.433 377.706 786.076 378.593C783.718 379.48 781.176 379.759 778.682 379.406C755.129 376.995 731.491 375.177 707.938 372.725C705.469 372.303 702.933 372.521 700.572 373.358C698.211 374.194 696.103 375.621 694.449 377.503C633.769 438.479 634.953 437.126 574.231 498.017C569.972 503.224 564.258 507.043 557.818 508.987C551.378 510.93 544.505 510.909 538.077 508.927C532.879 507.396 528.138 504.611 524.269 500.818C520.4 497.025 517.523 492.339 515.89 487.173C514.257 482.007 513.918 476.519 514.904 471.191C515.89 465.863 518.17 460.859 521.543 456.619C523.876 453.822 526.376 451.167 529.027 448.67C588.777 388.92 586.367 391.246 646.243 331.623C648.492 329.722 650.205 327.267 651.214 324.5C652.223 321.734 652.492 318.752 651.994 315.85C649.203 292.043 647.766 268.067 645.398 243.965C645.115 242.207 645.273 240.406 645.855 238.724C646.438 237.042 647.429 235.53 648.738 234.323C695.704 187.584 742.57 140.759 789.338 93.8503C790.243 93.2593 791.19 92.7364 792.171 92.2857C793.778 109.834 795.343 126.368 796.823 143.029H796.95ZM654.658 524.657C654.613 556.902 644.513 588.331 625.765 614.566C607.018 640.801 580.556 660.537 550.065 671.026C519.573 681.515 486.57 682.234 455.65 673.084C424.73 663.934 397.433 645.37 377.56 619.977C357.688 594.584 346.228 563.625 344.777 531.413C343.326 499.2 351.956 467.337 369.465 440.26C386.975 413.183 412.492 392.24 442.464 380.347C472.436 368.454 505.37 366.204 536.681 373.909L513.593 396.743L476.043 434.293C459.951 438.503 445.281 446.951 433.563 458.757C421.844 470.563 413.506 485.295 409.416 501.419C405.326 517.543 405.634 534.468 410.308 550.432C414.982 566.397 423.851 580.816 435.992 592.187C448.132 603.559 463.099 611.468 479.335 615.089C495.57 618.711 512.48 617.913 528.302 612.779C544.124 607.644 558.28 598.362 569.296 585.897C580.312 573.433 587.784 558.243 590.934 541.91L624.466 508.335L649.203 483.555C652.834 496.896 654.669 510.662 654.658 524.488V524.657Z"
+            fill="white"
+          />
+
+          <defs>
+            <linearGradient
+              id="appIconGradient"
+              x1="-10"
+              y1="0"
+              x2="1024"
+              y2="1033"
+              gradientUnits="userSpaceOnUse"
+            >
+              <stop stop-color="#FF423B"/>
+              <stop offset="1" stop-color="#FF0605"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      `.trim();
+
+      const svgDataUrl =
+        "data:image/svg+xml;charset=utf-8," +
+        encodeURIComponent(APP_ICON_SVG);
+
+      const favicon = document.getElementById("siteFavicon");
+      const shortcutIcon = document.getElementById("siteShortcutIcon");
+      const appleTouchIcon = document.getElementById("siteAppleTouchIcon");
+
+      favicon.href = svgDataUrl;
+      shortcutIcon.href = svgDataUrl;
+
+      appleTouchIcon.href = svgDataUrl;
+
+      function svgToPngDataUrl(size) {
+        return new Promise(function (resolve, reject) {
+          const image = new Image();
+
+          image.onload = function () {
+            try {
+              const canvas = document.createElement("canvas");
+              canvas.width = size;
+              canvas.height = size;
+
+              const context = canvas.getContext("2d");
+
+              if (!context) {
+                reject(new Error("无法创建 Canvas 上下文"));
+                return;
+              }
+
+              context.clearRect(0, 0, size, size);
+              context.drawImage(image, 0, 0, size, size);
+
+              resolve(canvas.toDataURL("image/png"));
+            } catch (error) {
+              reject(error);
+            }
+          };
+
+          image.onerror = reject;
+          image.src = svgDataUrl;
+        });
+      }
+
+      Promise.all([
+        svgToPngDataUrl(180),
+        svgToPngDataUrl(192),
+        svgToPngDataUrl(512)
+      ]).then(function (icons) {
+        const apple180 = icons[0];
+        const icon192 = icons[1];
+        const icon512 = icons[2];
+
+        appleTouchIcon.type = "image/png";
+        appleTouchIcon.href = apple180;
+
+        shortcutIcon.type = "image/png";
+        shortcutIcon.href = apple180;
+
+        const manifest = {
+          name: "高效能人士七个习惯知识库与工作台",
+          short_name: "要事第一",
+          description: "七个习惯知识库、要事第一工作台与复盘问题清单",
+          start_url: ".",
+          scope: ".",
+          display: "standalone",
+          background_color: "#f7f5f1",
+          theme_color: "#ff1d19",
+          icons: [
+            {
+              src: icon192,
+              sizes: "192x192",
+              type: "image/png",
+              purpose: "any"
+            },
+            {
+              src: icon512,
+              sizes: "512x512",
+              type: "image/png",
+              purpose: "any"
+            }
+          ]
+        };
+
+        const manifestDataUrl =
+          "data:application/manifest+json;charset=utf-8," +
+          encodeURIComponent(JSON.stringify(manifest));
+
+        document.getElementById("siteManifest").href = manifestDataUrl;
+      }).catch(function (error) {
+
+        console.warn("生成应用图标失败，已回退到 SVG 图标：", error);
+      });
+    })();
+  </script>
+
+  <script>
     (function () {
       try {
         var t = localStorage.getItem("sh_theme");
-        如果 (t === "dark" || (t === "system" &&
-            window.matchMedia("(prefers-color-scheme: dark)").匹配)) {
+        if (t === "dark" || (t === "system" &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches)) {
           document.documentElement.setAttribute("data-theme", "dark");
         }
       } catch (e) {}
